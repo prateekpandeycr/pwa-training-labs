@@ -14,8 +14,53 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// TODO 2.6 - Handle the notificationclose event
-
-// TODO 2.7 - Handle the notificationclick event
-
-// TODO 3.1 - add push event listener
+// done TODO 2.6 - Handle the notificationclose event
+self.addEventListener('notificationclose', event => {
+    const notification = event.notification;
+    const primaryKey = notification.data.primaryKey;
+  
+    console.log('Closed notification: ' + primaryKey);
+  });
+// done TODO 2.7 - Handle the notificationclick event
+self.addEventListener('notificationclick', event => {
+    self.addEventListener('notificationclick', event => {
+        const notification = event.notification;
+        const primaryKey = notification.data.primaryKey;
+        const action = event.action;
+      
+        if (action === 'close') {
+          notification.close();
+        } else {
+          clients.openWindow('samples/page' + primaryKey + '.html');
+          notification.close();
+        }
+      
+        // TODO 5.3 - close all notifications when one is clicked
+      
+      });
+    // TODO 2.8 - change the code to open a custom page
+  
+    // clients.openWindow('https://google.com');
+  });
+// done TODO 3.1 - add push event listener
+self.addEventListener('push', event => {
+    const options = {
+      body: 'This notification was generated from a push!',
+      icon: 'images/notification-flat.png',
+      vibrate: [100, 50, 100],
+      data: {
+        dateOfArrival: Date.now(),
+        primaryKey: 1
+      },
+      actions: [
+        {action: 'explore', title: 'Go to the site',
+          icon: 'images/checkmark.png'},
+        {action: 'close', title: 'Close the notification',
+          icon: 'images/xmark.png'},
+      ]
+    };
+  
+    event.waitUntil(
+      self.registration.showNotification('Push Notification', options)
+    );
+  });
